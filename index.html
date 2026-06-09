@@ -204,12 +204,12 @@
   /* ---- Bio ---- */
   .bio{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:start;max-width:880px;margin:14px auto;padding-top:14px;}
   .bio .avatar{
-    width:150px;height:150px;border-radius:50%;
+    width:300px;min-height:200px;border-radius:4px;
     background:var(--black);color:#fff;
     display:flex;align-items:center;justify-content:center;
     font-size:2.4rem;letter-spacing:.05em;overflow:hidden;flex-shrink:0;
   }
-  .bio .avatar img{width:100%;height:100%;object-fit:cover;}
+  .bio .avatar img{width:100%;height:auto;display:block;}
   .bio p{font-size:.95rem;color:#222;}
   @media(max-width:560px){ .bio{grid-template-columns:1fr;justify-items:center;text-align:left;} }
 
@@ -273,7 +273,7 @@
   <!-- BIO -->
   <section class="view" id="view-bio">
     <div class="bio">
-      <div class="avatar"><img src="artist.jpg" alt="Драшко Накиќ" onerror="this.style.display='none';this.parentNode.textContent='ДН';"></div>
+      <div class="avatar"><img src="artist.png" alt="Драшко Накиќ" onerror="this.style.display='none';this.parentNode.textContent='ДН';"></div>
       <p>Драшко Накиќ (14.07.1983, Скопје, Северна Македонија) е доктор на науки по биомедицинска информатика. Моментно работи на својот стартап, а поседува долгогодишно истражувачко искуство на универзитетите Харвард и Колумбија во САД. Во својата претприемачка и научна дејност, д-р Накиќ се фокусира на дизајн на алатки поткрепени од вештачка интелигенција кои им помагаат на пациентите да ги разберат своите медицински податоци и да комуницираат поефективно со лекарите. Во 2020 година, Драшко се одлучува да ги преточи своите вештини за визуелизација на податоци во презентирање на животни настани преку геометриски форми и строги правила на нивниот аранжман. Овој труд вродува со плод преку самостојна изложба во Њујорк (САД) во 2025 година.</p>
     </div>
   </section>
@@ -998,7 +998,7 @@ document.querySelectorAll("[data-view]").forEach(b=>{
 document.getElementById("brandBtn").addEventListener("click",()=>show("home"));
 
 /* ---------- hero ---------- */
-const featured = works.find(w=>w.no===24) || works[0];
+const featured = works.find(w=>w.no===21) || works[0];
 const heroImg = document.getElementById("heroImg");
 heroImg.src = enc(featured.file);
 heroImg.alt = featured.mk;
