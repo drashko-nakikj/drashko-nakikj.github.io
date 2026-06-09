@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gallery — Selected Works</title>
+<style>
+  :root {
+    --bg: #111110;
+    --panel: #1a1a18;
+    --text: #ece9e2;
+    --muted: #9a958a;
+    --accent: #c9a35b;
+    --gap: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 84px 24px 40px;
+    border-bottom: 1px solid #2a2a27;
+  }
+  header h1 {
+    font-weight: 300;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .count {
+    margin-top: 22px;
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* Gallery — masonry via CSS columns */
+  main {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: var(--gap);
+  }
+  .gallery {
+    column-count: 3;
+    column-gap: var(--gap);
+  }
+  @media (max-width: 900px) { .gallery { column-count: 2; } }
+  @media (max-width: 560px) { .gallery { column-count: 1; } }
+
+  figure {
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: var(--gap);
+    cursor: zoom-in;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--panel);
+  }
+  figure img {
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease, opacity 0.6s ease;
+    opacity: 0;
+  }
+  figure img.loaded { opacity: 1; }
+  figure:hover img { transform: scale(1.04); }
+  figcaption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 28px 16px 14px;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    background: linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0));
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  figure:hover figcaption { opacity: 1; transform: translateY(0); }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,8,7,0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+    padding: 40px;
+  }
+  .lightbox.open { opacity: 1; pointer-events: auto; }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .lightbox .lb-caption {
+    margin-top: 22px;
+    color: var(--text);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+  .lightbox .lb-caption small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .lb-close, .lb-nav {
+    position: absolute;
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 200;
+    transition: color 0.2s ease;
+    user-select: none;
+  }
+  .lb-close { top: 24px; right: 32px; font-size: 2.4rem; line-height: 1; }
+  .lb-nav { top: 50%; transform: translateY(-50%); font-size: 3rem; padding: 0 20px; }
+  .lb-prev { left: 8px; }
+  .lb-next { right: 8px; }
+  .lb-close:hover, .lb-nav:hover { color: var(--accent); }
+
+  footer {
+    text-align: center;
+    padding: 56px 24px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    border-top: 1px solid #2a2a27;
+    margin-top: 40px;
+  }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Selected <span>Works</span></h1>
+    <p>A collection of original artworks — moments, moods, and quiet observations rendered in color.</p>
+    <div class="count" id="count"></div>
+  </header>
+
+  <main>
+    <div class="gallery" id="gallery"></div>
+  </main>
+
+  <footer>
+    Made with <span>&hearts;</span> &middot; All works &copy; the artist
+  </footer>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+    <img id="lbImg" src="" alt="" />
+    <div class="lb-caption" id="lbCaption"></div>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next">&#8250;</button>
+  </div>
+
+<script>
+  // List of artwork files (in this folder)
+  const files = [
+    "L1 fall is beautiful.png",
+    "L2 you are my sunshine.png",
+    "L3 pool jumping in orlando.png",
+    "L4 smoring on a campfire.png",
+    "L5 spiraling thoughts.png",
+    "L6 we respect your privacy sir.png",
+    "L7 this reality has to be a dream.png",
+    "L8 in search for an answer.png",
+    "L9 take a streaming pill.png",
+    "L10 the weekly grind.png",
+    "L11 a complicated solution to a simple problem.png",
+    "L12 sunrise.png",
+    "L13 kopajonik summer vacation.png",
+    "L14 embraced by the macedonian sun.png",
+    "L15 careless play in the park.png",
+    "L16 no rain for the evening stroll.png",
+    "L17 ladis feedback.png",
+    "L18 making bracelets with my daughters.png",
+    "L19 listening to new yorks heartbeat.png",
+    "L20 closing the curtain before bed.png",
+    "L21 chillin at chillin.png",
+    "L22 not in creative mood.png",
+    "L23 home but confused.png",
+    "L24 do you trust me now.png",
+    "L25 but why the rush my friends.png",
+    "L26 media factslaughter.png",
+    "L27 ah, new york exciting rugged and unfinshed.png",
+    "L28 finally peace for thoughts.png",
+    "L29 killer whales for a killer show.png",
+    "L30 critical thinking.png",
+    "L31 oh, a new idea.png"
+  ];
+
+  // Build {file, no, title} records
+  const works = files.map(f => {
+    const base = f.replace(/\.png$/i, "");
+    const m = base.match(/^L(\d+)\s+(.*)$/);
+    const no = m ? parseInt(m[1], 10) : 0;
+    let title = m ? m[2] : base;
+    title = title.replace(/\b\w/g, c => c.toUpperCase());
+    return { file: f, no, title };
+  }).sort((a, b) => a.no - b.no);
+
+  // Render gallery
+  const gallery = document.getElementById("gallery");
+  works.forEach((w, i) => {
+    const fig = document.createElement("figure");
+    fig.dataset.index = i;
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.src = encodeURI(w.file);
+    img.alt = w.title;
+    img.addEventListener("load", () => img.classList.add("loaded"));
+    const cap = document.createElement("figcaption");
+    cap.textContent = w.title;
+    fig.appendChild(img);
+    fig.appendChild(cap);
+    fig.addEventListener("click", () => openLightbox(i));
+    gallery.appendChild(fig);
+  });
+
+  document.getElementById("count").textContent = works.length + " Works";
+
+  // Lightbox
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lbImg");
+  const lbCap = document.getElementById("lbCaption");
+  let current = 0;
+
+  function openLightbox(i) {
+    current = i;
+    update();
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLightbox() {
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  function update() {
+    const w = works[current];
+    lbImg.src = encodeURI(w.file);
+    lbImg.alt = w.title;
+    lbCap.innerHTML = w.title + "<small>No. " + w.no + " of " + works.length + "</small>";
+  }
+  function next() { current = (current + 1) % works.length; update(); }
+  function prev() { current = (current - 1 + works.length) % works.length; update(); }
+
+  document.getElementById("lbClose").addEventListener("click", closeLightbox);
+  document.getElementById("lbNext").addEventListener("click", e => { e.stopPropagation(); next(); });
+  document.getElementById("lbPrev").addEventListener("click", e => { e.stopPropagation(); prev(); });
+  lb.addEventListener("click", e => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+  });
+</script>
+</body>
+</html>
