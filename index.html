@@ -61,6 +61,16 @@
   }
   nav button:hover{color:#fff;}
   nav button.active{color:#fff;font-weight:700;border-bottom-color:#fff;}
+  .bar-right{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+  .langsw{display:flex;align-items:center;gap:7px;}
+  .langsw button{
+    background:none;border:none;color:#888;font-family:inherit;
+    font-size:0.82rem;letter-spacing:0.08em;cursor:pointer;padding:2px;
+    transition:color .2s ease;
+  }
+  .langsw button:hover{color:#fff;}
+  .langsw button.active{color:#fff;font-weight:700;}
+  .langsw span{color:#555;font-size:0.8rem;}
 
   /* ---- generic view ---- */
   .view{display:none;padding:38px 34px 56px;}
@@ -227,19 +237,24 @@
 <div class="shell">
   <header class="bar">
     <button class="brand" id="brandBtn">Драшко Накиќ</button>
-    <nav>
-      <button data-view="gallery">Галерија</button>
-      <button data-view="shop">Продажба</button>
-      <button data-view="bio">Биографија</button>
-    </nav>
+    <div class="bar-right">
+      <nav>
+        <button data-view="gallery" id="nav-gallery">Галерија</button>
+        <button data-view="shop" id="nav-shop">Продажба</button>
+        <button data-view="bio" id="nav-bio">Биографија</button>
+      </nav>
+      <div class="langsw" id="langSwitch" aria-label="Language">
+        <button data-lang="mk">MK</button><span>/</span><button data-lang="en">EN</button>
+      </div>
+    </div>
   </header>
 
   <!-- HOME / HERO -->
   <section class="view active" id="view-home">
     <div class="hero">
       <div>
-        <h1>Настани од животот и секојдневието преточени во геометриски форми.</h1>
-        <button class="cta" data-view="gallery">Разгледај ја галеријата</button>
+        <h1 id="heroText">Настани од животот и секојдневието преточени во геометриски форми.</h1>
+        <button class="cta" data-view="gallery" id="heroCta">Разгледај ја галеријата</button>
       </div>
       <div class="frame"><img id="heroImg" alt="Истакнато дело" /></div>
     </div>
@@ -247,27 +262,17 @@
 
   <!-- GALLERY -->
   <section class="view" id="view-gallery">
-    <h2 class="section">Дигитална уметност со геометриски форми</h2>
-    <p class="lead">Сите дела се направени во Microsoft PowerPoint на MacBook Pro. Искористени се формите достапни во PowerPoint, а цртањето на форми со слободна рака е извршено со помош на допирната површина (touchpad).</p>
+    <h2 class="section" id="galleryH">Дигитална уметност со геометриски форми</h2>
+    <p class="lead" id="galleryLead">Сите дела се направени во Microsoft PowerPoint на MacBook Pro. Искористени се формите достапни во PowerPoint, а цртањето на форми со слободна рака е извршено со помош на допирната површина (touchpad).</p>
     <div class="grid" id="galleryGrid"></div>
   </section>
 
   <!-- SHOP -->
   <section class="view" id="view-shop">
-    <h2 class="section">Три категории, универзални цени</h2>
+    <h2 class="section" id="shopH">Три категории, универзални цени</h2>
     <div class="pricewrap">
-      <p class="lead">Сите дела се достапни во било која големина без никаква загуба на квалитетот. Делата се нудат испечатени на ПВЦ винил и искаширани на 5 мм Форекс плоча.<br><br>
-      За едноставност, понудени се три популарни категории со по две димензии за секоја. Секоја категорија има универзални цени без оглед на димензиите: мала – 4000 ден. само за принтот и 5000 ден. комплетно врамена, средна – 4500 ден. и 6000 ден., и голема – 5000 ден. и 7000 ден. Со кликнување на делото ќе ги добиете деталните информации. За димензии вон понудените, цената ќе биде дополнително пресметана.<br><br>
-      Изготвувањето на делото се врши во рок од 48 часа. Истото може да се превземе само во рамките на Скопје на локација утврдена помеѓу уметникот и купецот.<br><br>
-      Ако сте заинтересирани, исконтактирајте ме на мојот Instagram профил: <a href="https://instagram.com/drashko.nakikj.art" target="_blank" rel="noopener">@drashko.nakikj.art</a>.</p>
-      <table class="prices">
-        <thead><tr><th></th><th>принт</th><th>врамена</th></tr></thead>
-        <tbody>
-          <tr><th>мала</th><td>4000 ден.</td><td>5000 ден.</td></tr>
-          <tr><th>средна</th><td>4500 ден.</td><td>6000 ден.</td></tr>
-          <tr><th>голема</th><td>5000 ден.</td><td>7000 ден.</td></tr>
-        </tbody>
-      </table>
+      <p class="lead" id="shopLead"></p>
+      <table class="prices" id="priceTable"></table>
     </div>
     <div class="grid" id="shopGrid"></div>
   </section>
@@ -275,13 +280,13 @@
   <!-- BIO -->
   <section class="view" id="view-bio">
     <div class="bio">
-      <div class="avatar"><img src="artist.png" alt="Драшко Накиќ" onerror="this.style.display='none';this.parentNode.textContent='ДН';"></div>
-      <p>Драшко Накиќ (14.07.1983, Скопје, Северна Македонија) е доктор на науки по биомедицинска информатика. Моментно работи на својот стартап, а поседува долгогодишно истражувачко искуство на универзитетите Харвард и Колумбија во САД. Во својата претприемачка и научна дејност, д-р Накиќ се фокусира на дизајн на алатки поткрепени од вештачка интелигенција кои им помагаат на пациентите да ги разберат своите медицински податоци и да комуницираат поефективно со лекарите. Во 2020 година, Драшко се одлучува да ги преточи своите вештини за визуелизација на податоци во презентирање на животни настани преку геометриски форми и строги правила на нивниот аранжман. Овој труд вродува со плод преку самостојни изложби во Њујорк (САД) во 2025 година и Скопје (Северна Македонија) во 2026 година.</p>
+      <div class="avatar"><img src="artist.png" id="bioImg" alt="Драшко Накиќ" onerror="this.style.display='none';this.parentNode.textContent='ДН';"></div>
+      <p id="bioText"></p>
     </div>
   </section>
 
   <footer class="foot">
-    <span>© <span id="yr"></span> Драшко Накиќ</span>
+    <span>© <span id="yr"></span> <span id="footBrand">Драшко Накиќ</span></span>
     <a href="https://instagram.com/drashko.nakikj.art" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>drashko.nakikj.art</a>
   </footer>
 </div>
@@ -309,7 +314,7 @@
         <div class="cap"><div class="t" id="smTitle"></div><div class="y" id="smYear"></div></div>
       </div>
       <div>
-        <h3>Големини и цени</h3>
+        <h3 id="sizesH">Големини и цени</h3>
         <div id="smPrices"></div>
       </div>
     </div>
@@ -971,11 +976,54 @@ const works = [
   }
 ];
 
-const CAT = [
-  {key:"small",  label:"мала",   print:"4000", frame:"5000"},
-  {key:"medium", label:"средна", print:"4500", frame:"6000"},
-  {key:"large",  label:"голема", print:"5000", frame:"7000"},
+/* artworks no. 24 and 25 are questions; the rest are exclamations */
+works.forEach(w=>{ w.q = (w.no===24 || w.no===25); });
+
+const PRICES = [
+  {key:"small",  print:"4000", frame:"5000"},
+  {key:"medium", print:"4500", frame:"6000"},
+  {key:"large",  print:"5000", frame:"7000"},
 ];
+
+const I18N = {
+  mk: {
+    brand: "Драшко Накиќ",
+    nav: { gallery:"Галерија", shop:"Продажба", bio:"Биографија" },
+    heroText: "Настани од животот и секојдневието преточени во геометриски форми.",
+    heroCta: "Разгледај ја галеријата",
+    galleryH: "Дигитална уметност со геометриски форми",
+    galleryLead: "Сите дела се направени во Microsoft PowerPoint на MacBook Pro. Искористени се формите достапни во PowerPoint, а цртањето на форми со слободна рака е извршено со помош на допирната површина (touchpad).",
+    shopH: "Три категории, универзални цени",
+    shopLead: 'Сите дела се достапни во било која големина без никаква загуба на квалитетот. Делата се нудат испечатени на ПВЦ винил и искаширани на 5 мм Форекс плоча.<br><br>За едноставност, понудени се три популарни категории со по две димензии за секоја. Секоја категорија има универзални цени без оглед на димензиите: мала – 4000 ден. само за принтот и 5000 ден. комплетно врамена, средна – 4500 ден. и 6000 ден., и голема – 5000 ден. и 7000 ден. Со кликнување на делото ќе ги добиете деталните информации. За димензии вон понудените, цената ќе биде дополнително пресметана.<br><br>Изготвувањето на делото се врши во рок од 48 часа. Истото може да се превземе само во рамките на Скопје на локација утврдена помеѓу уметникот и купецот.<br><br>Ако сте заинтересирани, исконтактирајте ме на мојот Instagram профил: <a href="https://instagram.com/drashko.nakikj.art" target="_blank" rel="noopener">@drashko.nakikj.art</a>.',
+    thPrint:"принт", thFramed:"врамена", cur:"ден.",
+    cat:{ small:"мала", medium:"средна", large:"голема" },
+    sizesH:"Големини и цени",
+    priceLine:(p,f)=> p+" ден. само принт · "+f+" ден. врамена",
+    bio: "Драшко Накиќ (14.07.1983, Скопје, Северна Македонија) е доктор на науки по биомедицинска информатика. Моментно работи на својот стартап, а поседува долгогодишно истражувачко искуство на универзитетите Харвард и Колумбија во САД. Во својата претприемачка и научна дејност, д-р Накиќ се фокусира на дизајн на алатки поткрепени од вештачка интелигенција кои им помагаат на пациентите да ги разберат своите медицински податоци и да комуницираат поефективно со лекарите. Во 2020 година, Драшко се одлучува да ги преточи своите вештини за визуелизација на податоци во презентирање на животни настани преку геометриски форми и строги правила на нивниот аранжман. Овој труд вродува со плод преку самостојни изложби во Њујорк (САД) во 2025 година и Скопје (Северна Македонија) во 2026 година."
+  },
+  en: {
+    brand: "Drashko Nakikj",
+    nav: { gallery:"Gallery", shop:"Shop", bio:"Biography" },
+    heroText: "Moments from life and the everyday, distilled into geometric shapes.",
+    heroCta: "Explore the gallery",
+    galleryH: "Digital art in geometric shapes",
+    galleryLead: "All works are made in Microsoft PowerPoint on a MacBook Pro, using the shapes available in PowerPoint, with the freehand shapes drawn using the trackpad (touchpad).",
+    shopH: "Three categories, universal prices",
+    shopLead: 'Every work is available in any size with no loss of quality. Works are offered printed on PVC vinyl and mounted on a 5 mm Forex board.<br><br>For simplicity, three popular categories are offered, each with two dimensions. Every category has universal prices regardless of the dimensions: small – 4000 den. for the print only and 5000 den. fully framed, medium – 4500 den. and 6000 den., and large – 5000 den. and 7000 den. Click on a work to see its detailed information. For dimensions beyond those offered, the price will be calculated separately.<br><br>Each work is produced within 48 hours. It can be picked up only within Skopje, at a location agreed upon between the artist and the buyer.<br><br>If you are interested, reach out to me on my Instagram profile: <a href="https://instagram.com/drashko.nakikj.art" target="_blank" rel="noopener">@drashko.nakikj.art</a>.',
+    thPrint:"print", thFramed:"framed", cur:"den.",
+    cat:{ small:"small", medium:"medium", large:"large" },
+    sizesH:"Sizes & prices",
+    priceLine:(p,f)=> p+" den. print only · "+f+" den. framed",
+    bio: "Drashko Nakikj (born July 14, 1983, Skopje, North Macedonia) holds a PhD in biomedical informatics. He is currently building his own startup and has many years of research experience at Harvard and Columbia universities in the USA. In his entrepreneurial and scientific work, Dr. Nakikj focuses on designing AI-powered tools that help patients understand their medical data and communicate more effectively with their doctors. In 2020, Drashko decided to channel his data-visualization skills into portraying life events through geometric shapes and strict rules for their arrangement. This work has borne fruit through solo exhibitions in New York (USA) in 2025 and Skopje (North Macedonia) in 2026."
+  }
+};
+
+let lang = (function(){
+  try { const s = localStorage.getItem("lang"); if(s==="mk"||s==="en") return s; } catch(e){}
+  return "mk";
+})();
+const t = () => I18N[lang];
+const titleOf = w => w[lang] + (w.q ? " ?" : " !");
 
 const enc = s => encodeURI(s);
 document.getElementById("yr").textContent = "2026";
@@ -1003,7 +1051,7 @@ document.getElementById("brandBtn").addEventListener("click",()=>show("home"));
 const featured = works.find(w=>w.no===21) || works[0];
 const heroImg = document.getElementById("heroImg");
 heroImg.src = enc(featured.file);
-heroImg.alt = featured.mk;
+heroImg.alt = titleOf(featured);
 
 /* ---------- build grids ---------- */
 function makeCard(w, onClick){
@@ -1014,22 +1062,26 @@ function makeCard(w, onClick){
   const img = document.createElement("img");
   img.loading = "lazy";
   img.src = enc(w.file);
-  img.alt = w.mk;
+  img.alt = titleOf(w);
   img.addEventListener("load",()=>img.classList.add("loaded"));
   thumb.appendChild(img);
   const meta = document.createElement("div");
   meta.className = "meta";
-  meta.innerHTML = '<div class="t">'+w.mk+' !</div><div class="y">'+w.year+'</div>';
+  meta.innerHTML = '<div class="t"></div><div class="y">'+w.year+'</div>';
+  meta.querySelector(".t").textContent = titleOf(w);
   card.appendChild(thumb); card.appendChild(meta);
   card.addEventListener("click",()=>onClick(w.no));
   return card;
 }
 const gGrid = document.getElementById("galleryGrid");
 const sGrid = document.getElementById("shopGrid");
-works.forEach(w=>{
-  gGrid.appendChild(makeCard(w, openGallery));
-  sGrid.appendChild(makeCard(w, openShop));
-});
+function buildGrids(){
+  gGrid.innerHTML = ""; sGrid.innerHTML = "";
+  works.forEach(w=>{
+    gGrid.appendChild(makeCard(w, openGallery));
+    sGrid.appendChild(makeCard(w, openShop));
+  });
+}
 
 /* ---------- gallery modal ---------- */
 const galleryModal = document.getElementById("galleryModal");
@@ -1037,8 +1089,8 @@ let gIndex = 0;
 function renderGallery(){
   const w = works[gIndex];
   document.getElementById("gmImg").src = enc(w.file);
-  document.getElementById("gmImg").alt = w.mk;
-  document.getElementById("gmTitle").textContent = w.mk + " !";
+  document.getElementById("gmImg").alt = titleOf(w);
+  document.getElementById("gmTitle").textContent = titleOf(w);
   document.getElementById("gmYear").textContent = w.year;
 }
 function openGallery(no){ gIndex = works.findIndex(w=>w.no===no); renderGallery(); openModal(galleryModal); }
@@ -1051,19 +1103,22 @@ let sIndex = 0;
 function renderShop(){
   const w = works[sIndex];
   document.getElementById("smImg").src = enc(w.file);
-  document.getElementById("smImg").alt = w.mk;
-  document.getElementById("smTitle").textContent = w.mk + " !";
+  document.getElementById("smImg").alt = titleOf(w);
+  document.getElementById("smTitle").textContent = titleOf(w);
   document.getElementById("smYear").textContent = w.year;
   const box = document.getElementById("smPrices");
   box.innerHTML = "";
-  CAT.forEach(c=>{
+  PRICES.forEach(c=>{
     const dims = w.sizes[c.key].join(" · ");
     const div = document.createElement("div");
     div.className = "cat";
     div.innerHTML =
-      '<div class="head">'+c.label+'</div>'+
-      '<div class="price">'+c.print+' ден. само принт · '+c.frame+' ден. врамена</div>'+
-      '<div class="dim">'+dims+'</div>';
+      '<div class="head"></div>'+
+      '<div class="price"></div>'+
+      '<div class="dim"></div>';
+    div.querySelector(".head").textContent = t().cat[c.key];
+    div.querySelector(".price").textContent = t().priceLine(c.print, c.frame);
+    div.querySelector(".dim").textContent = dims;
     box.appendChild(div);
   });
 }
@@ -1088,7 +1143,55 @@ document.addEventListener("keydown",e=>{
   }
 });
 
-/* ---------- initial route ---------- */
+/* ---------- language ---------- */
+function buildPriceTable(){
+  const d = t();
+  let html = '<thead><tr><th></th><th>'+d.thPrint+'</th><th>'+d.thFramed+'</th></tr></thead><tbody>';
+  PRICES.forEach(c=>{
+    html += '<tr><th>'+d.cat[c.key]+'</th><td>'+c.print+' '+d.cur+'</td><td>'+c.frame+' '+d.cur+'</td></tr>';
+  });
+  html += '</tbody>';
+  document.getElementById("priceTable").innerHTML = html;
+}
+function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+function applyLang(l){
+  lang = (l==="en") ? "en" : "mk";
+  try { localStorage.setItem("lang", lang); } catch(e){}
+  document.documentElement.lang = lang;
+  const d = t();
+  // header / nav / footer
+  setText("brandBtn", d.brand);
+  setText("footBrand", d.brand);
+  setText("nav-gallery", d.nav.gallery);
+  setText("nav-shop", d.nav.shop);
+  setText("nav-bio", d.nav.bio);
+  document.querySelectorAll("#langSwitch button").forEach(b=>b.classList.toggle("active", b.dataset.lang===lang));
+  // hero
+  setText("heroText", d.heroText);
+  setText("heroCta", d.heroCta);
+  heroImg.alt = titleOf(featured);
+  // gallery
+  setText("galleryH", d.galleryH);
+  setText("galleryLead", d.galleryLead);
+  // shop
+  setText("shopH", d.shopH);
+  document.getElementById("shopLead").innerHTML = d.shopLead;
+  buildPriceTable();
+  setText("sizesH", d.sizesH);
+  // bio
+  document.getElementById("bioText").textContent = d.bio;
+  document.getElementById("bioImg").alt = d.brand;
+  // dynamic content
+  buildGrids();
+  if(galleryModal.classList.contains("open")) renderGallery();
+  if(shopModal.classList.contains("open")) renderShop();
+}
+document.querySelectorAll("#langSwitch button").forEach(b=>{
+  b.addEventListener("click",()=>applyLang(b.dataset.lang));
+});
+
+/* ---------- initial render ---------- */
+applyLang(lang);
 const start = location.hash.slice(1);
 show(["gallery","shop","bio"].includes(start) ? start : "home");
 </script>
