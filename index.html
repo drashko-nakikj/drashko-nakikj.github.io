@@ -221,6 +221,8 @@
   }
   .bio .avatar img{width:100%;height:auto;display:block;}
   .bio p{font-size:.95rem;color:#222;}
+  .bio-link{color:var(--ink);text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-weight:600;}
+  .bio-link:hover{color:var(--accent);}
 
   /* ---- Generative process ---- */
   .generative{margin-top:52px;}
@@ -238,7 +240,7 @@
   /* ---- Exhibitions ---- */
   .exhibitions{margin-top:52px;}
   .exhibitions h2.section{margin-bottom:26px;}
-  .exh{margin-bottom:38px;}
+  .exh{margin-bottom:38px;scroll-margin-top:24px;}
   .exh-h{font-size:1.05rem;font-weight:700;margin-bottom:3px;}
   .exh-sub{color:var(--muted);font-size:0.85rem;margin-bottom:14px;}
   .exh-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;}
@@ -1123,6 +1125,7 @@ const PRICES = [
 
 const EXHIBITIONS = [
   {
+    anchor:  "skopje",
     city:    { mk:"Скопје",  en:"Skopje" },
     country: { mk:"Северна Македонија", en:"North Macedonia" },
     venue:   { mk:"КСП Јадро", en:"KSP Jadro" },
@@ -1130,6 +1133,7 @@ const EXHIBITIONS = [
     items:   [1,2,3,4,5,6,7,8,10,12,13,14,15,16,17,18,19,20,21,22,23]
   },
   {
+    anchor:  "newyork",
     city:    { mk:"Њујорк", en:"New York" },
     country: { mk:"САД", en:"USA" },
     venue:   { mk:"Gallery MC", en:"Gallery MC" },
@@ -1158,6 +1162,7 @@ const I18N = {
     cat:{ small:"мала", medium:"средна", large:"голема" },
     sizesH:"Големини и цени",
     bioH:"Спој на наука и уметност",
+    bioLinks:{ newyork:"Њујорк (САД)", skopje:"Скопје (Северна Македонија)" },
     exhTitle:"Самостојни изложби",
     gpTitle:"Генеративен процес",
     gpText:"Делата се создадени во Microsoft PowerPoint на MacBook Pro, а цртањето е извршено со помош на допирната површина (touchpad). За подоброo презентирање на процесот, извршeна е декомпозиција на делото „Во потрага по одговор !“.<br><br>Секое дело има своја визуелна азбука и лимитирана палета на бои. За оваа конкретна творба, искористени се основни форми достапни во PowerPoint (кругови, правоаголници, квадрати и линии) и форми нацртани со слободна рака (линија, шкртка и спирала). Користени се само црна, црвена и бела боја. Овие форми варираат во големина, дебелина, пропорција и густина, но нивната ориентација е строго хоризонтална или вертикална.<br><br>Од овие „букви“ се формираат визуелни зборови со два или повеќе елементи. Кај некои зборови има мешање на геометриски и слободни форми за да се доловат контрастни, енергични и динамични експресии. Понатаму, зборовите се користат за формирање визуелни реченици кои изразуваат посебна идеја, насочувајќи го вниманието на гледачот на одреден сегмент од делото и активирајќи го неговиот мисловен процес. На крајот, исто како во есеј, секое дело е составено од визуелни параграфи. Додека зборовите го диктираат расположението и тонот, параграфите ги доловуваат главните концепти зад насловот и ги испреплетуваат меѓу себе за да воспостават евокативна врска помеѓу името на делото и визуелниот приказ.",
@@ -1177,6 +1182,7 @@ const I18N = {
     cat:{ small:"small", medium:"medium", large:"large" },
     sizesH:"Sizes & prices",
     bioH:"Intersecting Science and Art",
+    bioLinks:{ newyork:"New York (USA)", skopje:"Skopje (North Macedonia)" },
     exhTitle:"Solo Exhibitions",
     gpTitle:"Generative Process",
     gpText:"The works are created in Microsoft PowerPoint on a MacBook Pro, with drawing executed using the touchpad. To better illustrate the process, a decomposition of the artwork “In Search Of An Answer !” has been laid out.<br><br>Each artwork has its own visual alphabet and a limited color palette. For this particular piece, basic shapes available in PowerPoint (circles, rectangles, squares, and lines) were used, along with freehand-drawn forms (line, scribble, and spiral). Only black, red and white colors were utilized. These shapes can vary in size, thickness, proportion and density, but their orientation is strictly horizontal or vertical.<br><br>From these “letters,” visual words composed of two or more elements are formed. In some words, geometric and freehand forms are combined to achieve contrasting, energetic, and dynamic expressions. These words are then used to form visual sentences that express a specific idea, directing the viewer’s attention to a particular segment of the artwork and activating their thought process. Finally, much like an essay, each artwork is composed of visual paragraphs. While the words dictate mood and vibe, the paragraphs convey the main concepts behind the work’s title and interweave them to establish an evocative connection to its visual representation.",
@@ -1339,6 +1345,7 @@ function renderExhibitions(){
   EXHIBITIONS.forEach(ex=>{
     const seg = document.createElement("div");
     seg.className = "exh";
+    if(ex.anchor) seg.id = "exh-" + ex.anchor;
     const title = document.createElement("div");
     title.className = "exh-h";
     title.textContent = ex.city[lang] + ", " + ex.country[lang] + " — " + ex.venue[lang];
@@ -1435,7 +1442,17 @@ function applyLang(l){
   setText("sizesH", d.sizesH);
   // bio
   setText("bioH", d.bioH);
-  document.getElementById("bioText").textContent = d.bio;
+  let bioHtml = d.bio
+    .replace(d.bioLinks.newyork, '<a class="bio-link" data-exh="newyork">'+d.bioLinks.newyork+'</a>')
+    .replace(d.bioLinks.skopje, '<a class="bio-link" data-exh="skopje">'+d.bioLinks.skopje+'</a>');
+  const bioEl = document.getElementById("bioText");
+  bioEl.innerHTML = bioHtml;
+  bioEl.querySelectorAll(".bio-link").forEach(a=>{
+    a.addEventListener("click",()=>{
+      const el = document.getElementById("exh-"+a.dataset.exh);
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  });
   document.getElementById("bioImg").alt = d.brand;
   // dynamic content
   buildGrids();
