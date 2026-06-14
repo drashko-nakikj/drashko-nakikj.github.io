@@ -212,7 +212,7 @@
   @media(max-width:680px){ .mprev{left:6px;} .mnext{right:6px;} }
 
   /* ---- Bio ---- */
-  .bio{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:start;max-width:880px;margin:14px auto;padding-top:14px;}
+  .bio{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:start;max-width:880px;margin:14px 0;padding-top:14px;}
   .bio .avatar{
     width:300px;min-height:200px;border-radius:4px;
     background:var(--black);color:#fff;
@@ -251,7 +251,7 @@
   }
   .ethumb img{max-width:100%;max-height:100%;display:block;transition:transform .3s ease;}
   .ethumb:hover img{transform:scale(1.06);}
-  @media(max-width:560px){ .bio{grid-template-columns:1fr;justify-items:center;text-align:left;} }
+  @media(max-width:560px){ .bio{grid-template-columns:1fr;justify-items:start;text-align:left;} }
 
   footer.foot{
     border-top:1px solid var(--line);
@@ -309,6 +309,7 @@
 
   <!-- BIO -->
   <section class="view" id="view-bio">
+    <h2 class="section" id="bioH"></h2>
     <div class="bio">
       <div class="avatar"><img src="artist.png" id="bioImg" alt="Драшко Накиќ" onerror="this.style.display='none';this.parentNode.textContent='ДН';"></div>
       <p id="bioText"></p>
@@ -1156,6 +1157,7 @@ const I18N = {
     thPrint:"принт", thFramed:"врамена", cur:"ден.",
     cat:{ small:"мала", medium:"средна", large:"голема" },
     sizesH:"Големини и цени",
+    bioH:"Спој на наука и уметност",
     exhTitle:"Самостојни изложби",
     gpTitle:"Генеративен процес",
     gpText:"Делата се создадени во Microsoft PowerPoint на MacBook Pro, а цртањето е извршено со помош на допирната површина (touchpad). За подоброo презентирање на процесот, извршeна е декомпозиција на делото „Во потрага по одговор !“.<br><br>Секое дело има своја визуелна азбука и лимитирана палета на бои. За оваа конкретна творба, искористени се основни форми достапни во PowerPoint (кругови, правоаголници, квадрати и линии) и форми нацртани со слободна рака (линија, шкртка и спирала). Користени се само црна, црвена и бела боја. Овие форми варираат во големина, дебелина, пропорција и густина, но нивната ориентација е строго хоризонтална или вертикална.<br><br>Од овие „букви“ се формираат визуелни зборови со два или повеќе елементи. Кај некои зборови има мешање на геометриски и слободни форми за да се доловат контрастни, енергични и динамични експресии. Понатаму, зборовите се користат за формирање визуелни реченици кои изразуваат посебна идеја, насочувајќи го вниманието на гледачот на одреден сегмент од делото и активирајќи го неговиот мисловен процес. На крајот, исто како во есеј, секое дело е составено од визуелни параграфи. Додека зборовите го диктираат расположението и тонот, параграфите ги доловуваат главните концепти зад насловот и ги испреплетуваат меѓу себе за да воспостават евокативна врска помеѓу името на делото и визуелниот приказ.",
@@ -1174,6 +1176,7 @@ const I18N = {
     thPrint:"print", thFramed:"framed", cur:"den.",
     cat:{ small:"small", medium:"medium", large:"large" },
     sizesH:"Sizes & prices",
+    bioH:"Intersecting Science and Art",
     exhTitle:"Solo Exhibitions",
     gpTitle:"Generative Process",
     gpText:"The works are created in Microsoft PowerPoint on a MacBook Pro, with drawing executed using the touchpad. To better illustrate the process, a decomposition of the artwork “In Search Of An Answer !” has been laid out.<br><br>Each artwork has its own visual alphabet and a limited color palette. For this particular piece, basic shapes available in PowerPoint (circles, rectangles, squares, and lines) were used, along with freehand-drawn forms (line, scribble, and spiral). Only black, red and white colors were utilized. These shapes can vary in size, thickness, proportion and density, but their orientation is strictly horizontal or vertical.<br><br>From these “letters,” visual words composed of two or more elements are formed. In some words, geometric and freehand forms are combined to achieve contrasting, energetic, and dynamic expressions. These words are then used to form visual sentences that express a specific idea, directing the viewer’s attention to a particular segment of the artwork and activating their thought process. Finally, much like an essay, each artwork is composed of visual paragraphs. While the words dictate mood and vibe, the paragraphs convey the main concepts behind the work’s title and interweave them to establish an evocative connection to its visual representation.",
@@ -1431,6 +1434,7 @@ function applyLang(l){
   buildPriceTable();
   setText("sizesH", d.sizesH);
   // bio
+  setText("bioH", d.bioH);
   document.getElementById("bioText").textContent = d.bio;
   document.getElementById("bioImg").alt = d.brand;
   // dynamic content
