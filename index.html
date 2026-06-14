@@ -222,6 +222,19 @@
   .bio .avatar img{width:100%;height:auto;display:block;}
   .bio p{font-size:.95rem;color:#222;}
 
+  /* ---- Generative process ---- */
+  .generative{margin-top:52px;}
+  .generative h2.section{margin-bottom:14px;}
+  .generative .lead{margin-bottom:24px;}
+  .gp-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+  .gp-thumb{
+    aspect-ratio:1/1;background:var(--soft);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    cursor:zoom-in;border-radius:2px;
+  }
+  .gp-thumb img{max-width:100%;max-height:100%;display:block;transition:transform .3s ease;}
+  .gp-thumb:hover img{transform:scale(1.06);}
+
   /* ---- Exhibitions ---- */
   .exhibitions{margin-top:52px;}
   .exhibitions h2.section{margin-bottom:26px;}
@@ -300,6 +313,7 @@
       <div class="avatar"><img src="artist.png" id="bioImg" alt="Драшко Накиќ" onerror="this.style.display='none';this.parentNode.textContent='ДН';"></div>
       <p id="bioText"></p>
     </div>
+    <div class="generative" id="generative"></div>
     <div class="exhibitions" id="exhibitions"></div>
   </section>
 
@@ -317,6 +331,16 @@
     <button class="mnav mnext" data-gnext>&#8250;</button>
     <div class="img-c"><img id="gmImg" alt="" /></div>
     <div class="cap"><div class="t" id="gmTitle"></div><div class="y" id="gmYear"></div></div>
+  </div>
+</div>
+
+<!-- PROCESS MODAL (image only) -->
+<div class="modal" id="processModal">
+  <div class="panel gmodal">
+    <button class="close" data-pclose>&times;</button>
+    <button class="mnav mprev" data-pprev>&#8249;</button>
+    <button class="mnav mnext" data-pnext>&#8250;</button>
+    <div class="img-c"><img id="pmImg" alt="" /></div>
   </div>
 </div>
 
@@ -1113,6 +1137,12 @@ const EXHIBITIONS = [
   }
 ];
 
+/* generative-process images, in order: artwork, alphabet, words, sentences, paragraph */
+const GENERATIVE = {
+  mk: ["GP-MK artwork.png","GP-MK alphabet.png","GP-MK words.png","GP-MK sentences.png","GP-MK paragraph.png"],
+  en: ["GP-EN artwork.png","GP-EN alphabet.png","GP-EN words.png","GP-EN sentences.png","GP-EN paragraph.png"]
+};
+
 const I18N = {
   mk: {
     brand: "Драшко Накиќ",
@@ -1127,6 +1157,8 @@ const I18N = {
     cat:{ small:"мала", medium:"средна", large:"голема" },
     sizesH:"Големини и цени",
     exhTitle:"Самостојни изложби",
+    gpTitle:"Генеративен процес",
+    gpText:"Делата се создадени во Microsoft PowerPoint на MacBook Pro, а цртањето е извршено со помош на допирната површина (touchpad). За подоброo презентирање на процесот, извршeна е декомпозиција на делото „Во потрага по одговор !“.<br><br>Секое дело има своја визуелна азбука и лимитирана палета на бои. За оваа конкретна творба, искористени се основни форми достапни во PowerPoint (кругови, правоаголници, квадрати и линии) и форми нацртани со слободна рака (линија, шкртка и спирала). Користени се само црна, црвена и бела боја. Овие форми варираат во големина, дебелина, пропорција и густина, но нивната ориентација е строго хоризонтална или вертикална.<br><br>Од овие „букви“ се формираат визуелни зборови со два или повеќе елементи. Кај некои зборови има мешање на геометриски и слободни форми за да се доловат контрастни, енергични и динамични експресии. Понатаму, зборовите се користат за формирање визуелни реченици кои изразуваат посебна идеја, насочувајќи го вниманието на гледачот на одреден сегмент од делото и активирајќи го неговиот мисловен процес. На крајот, исто како во есеј, секое дело е составено од визуелни параграфи. Додека зборовите го диктираат расположението и тонот, параграфите ги доловуваат главните концепти зад насловот и ги испреплетуваат меѓу себе за да воспостават евокативна врска помеѓу името на делото и визуелниот приказ.",
     priceLine:(p,f)=> p+" ден. само принт · "+f+" ден. врамена",
     bio: "Драшко Накиќ (14.07.1983, Скопје, Северна Македонија) е доктор на науки по биомедицинска информатика. Моментно работи на својот стартап, а поседува долгогодишно истражувачко искуство на универзитетите Харвард и Колумбија во САД. Во својата претприемачка и научна дејност, д-р Накиќ се фокусира на дизајн на алатки поткрепени од вештачка интелигенција кои им помагаат на пациентите да ги разберат своите медицински податоци и да комуницираат поефективно со лекарите. Во 2020 година, Драшко се одлучува да ги преточи своите вештини за визуелизација на податоци во презентирање на животни настани преку геометриски форми и строги правила на нивниот аранжман. Овој труд вродува со плод преку самостојни изложби во Њујорк (САД) во 2025 година и Скопје (Северна Македонија) во 2026 година."
   },
@@ -1143,6 +1175,8 @@ const I18N = {
     cat:{ small:"small", medium:"medium", large:"large" },
     sizesH:"Sizes & prices",
     exhTitle:"Solo Exhibitions",
+    gpTitle:"Generative Process",
+    gpText:"The works are created in Microsoft PowerPoint on a MacBook Pro, with drawing executed using the touchpad. To better illustrate the process, a decomposition of the artwork “In Search Of An Answer !” has been laid out.<br><br>Each artwork has its own visual alphabet and a limited color palette. For this particular piece, basic shapes available in PowerPoint (circles, rectangles, squares, and lines) were used, along with freehand-drawn forms (line, scribble, and spiral). Only black, red and white colors were utilized. These shapes can vary in size, thickness, proportion and density, but their orientation is strictly horizontal or vertical.<br><br>From these “letters,” visual words composed of two or more elements are formed. In some words, geometric and freehand forms are combined to achieve contrasting, energetic, and dynamic expressions. These words are then used to form visual sentences that express a specific idea, directing the viewer’s attention to a particular segment of the artwork and activating their thought process. Finally, much like an essay, each artwork is composed of visual paragraphs. While the words dictate mood and vibe, the paragraphs convey the main concepts behind the work’s title and interweave them to establish an evocative connection to its visual representation.",
     priceLine:(p,f)=> p+" den. print only · "+f+" den. framed",
     bio: "Drashko Nakikj (born July 14, 1983, Skopje, North Macedonia) holds a PhD in biomedical informatics. He is currently building his own startup and has many years of research experience at Harvard and Columbia universities in the USA. In his entrepreneurial and scientific work, Dr. Nakikj focuses on designing AI-powered tools that help patients understand their medical data and communicate more effectively with their doctors. In 2020, Drashko decided to channel his data-visualization skills into portraying life events through geometric shapes and strict rules for their arrangement. This work has borne fruit through solo exhibitions in New York (USA) in 2025 and Skopje (North Macedonia) in 2026."
   }
@@ -1256,11 +1290,23 @@ function openShop(no){ sIndex = works.findIndex(w=>w.no===no); renderShop(); ope
 document.querySelector("[data-sprev]").addEventListener("click",()=>{sIndex=(sIndex-1+works.length)%works.length;renderShop();});
 document.querySelector("[data-snext]").addEventListener("click",()=>{sIndex=(sIndex+1)%works.length;renderShop();});
 
+/* ---------- process modal (image only) ---------- */
+const processModal = document.getElementById("processModal");
+let pList = [], pIdx = 0;
+function renderProcess(){
+  const g = pList[pIdx];
+  document.getElementById("pmImg").src = enc(g.file);
+  document.getElementById("pmImg").alt = g.alt || "";
+}
+function openProcess(i){ pIdx = i; renderProcess(); openModal(processModal); }
+document.querySelector("[data-pprev]").addEventListener("click",()=>{pIdx=(pIdx-1+pList.length)%pList.length;renderProcess();});
+document.querySelector("[data-pnext]").addEventListener("click",()=>{pIdx=(pIdx+1)%pList.length;renderProcess();});
+
 /* ---------- modal helpers ---------- */
 function openModal(m){ m.classList.add("open"); document.body.style.overflow="hidden"; }
-function closeModal(){ galleryModal.classList.remove("open"); shopModal.classList.remove("open"); document.body.style.overflow=""; }
-document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",closeModal));
-[galleryModal,shopModal].forEach(m=>m.addEventListener("click",e=>{ if(e.target===m) closeModal(); }));
+function closeModal(){ galleryModal.classList.remove("open"); shopModal.classList.remove("open"); processModal.classList.remove("open"); document.body.style.overflow=""; }
+document.querySelectorAll("[data-close],[data-pclose]").forEach(b=>b.addEventListener("click",closeModal));
+[galleryModal,shopModal,processModal].forEach(m=>m.addEventListener("click",e=>{ if(e.target===m) closeModal(); }));
 document.addEventListener("keydown",e=>{
   if(galleryModal.classList.contains("open")){
     if(e.key==="Escape")closeModal();
@@ -1270,6 +1316,10 @@ document.addEventListener("keydown",e=>{
     if(e.key==="Escape")closeModal();
     if(e.key==="ArrowLeft"){sIndex=(sIndex-1+works.length)%works.length;renderShop();}
     if(e.key==="ArrowRight"){sIndex=(sIndex+1)%works.length;renderShop();}
+  } else if(processModal.classList.contains("open")){
+    if(e.key==="Escape")closeModal();
+    if(e.key==="ArrowLeft"){pIdx=(pIdx-1+pList.length)%pList.length;renderProcess();}
+    if(e.key==="ArrowRight"){pIdx=(pIdx+1)%pList.length;renderProcess();}
   }
 });
 
@@ -1314,6 +1364,37 @@ function renderExhibitions(){
   });
 }
 
+/* ---------- generative process (bio page) ---------- */
+function renderGenerative(){
+  const box = document.getElementById("generative");
+  if(!box) return;
+  const d = t();
+  box.innerHTML = "";
+  const h = document.createElement("h2");
+  h.className = "section";
+  h.textContent = d.gpTitle;
+  box.appendChild(h);
+  const p = document.createElement("p");
+  p.className = "lead";
+  p.innerHTML = d.gpText;
+  box.appendChild(p);
+  const row = document.createElement("div");
+  row.className = "gp-row";
+  pList = GENERATIVE[lang].map(f=>({file:f, alt:""}));
+  pList.forEach((g,i)=>{
+    const th = document.createElement("div");
+    th.className = "gp-thumb";
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.src = enc(g.file);
+    img.alt = "";
+    th.appendChild(img);
+    th.addEventListener("click",()=>openProcess(i));
+    row.appendChild(th);
+  });
+  box.appendChild(row);
+}
+
 /* ---------- language ---------- */
 function buildPriceTable(){
   const d = t();
@@ -1354,6 +1435,7 @@ function applyLang(l){
   document.getElementById("bioImg").alt = d.brand;
   // dynamic content
   buildGrids();
+  renderGenerative();
   renderExhibitions();
   if(galleryModal.classList.contains("open")) renderGallery();
   if(shopModal.classList.contains("open")) renderShop();
