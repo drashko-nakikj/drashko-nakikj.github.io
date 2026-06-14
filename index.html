@@ -221,6 +221,23 @@
   }
   .bio .avatar img{width:100%;height:auto;display:block;}
   .bio p{font-size:.95rem;color:#222;}
+
+  /* ---- Exhibitions ---- */
+  .exhibitions{margin-top:52px;}
+  .exhibitions h2.section{margin-bottom:26px;}
+  .exh{margin-bottom:38px;}
+  .exh-h{font-size:1.05rem;font-weight:700;margin-bottom:3px;}
+  .exh-sub{color:var(--muted);font-size:0.85rem;margin-bottom:14px;}
+  .exh-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;}
+  @media(max-width:760px){ .exh-grid{grid-template-columns:repeat(5,1fr);} }
+  @media(max-width:480px){ .exh-grid{grid-template-columns:repeat(4,1fr);} }
+  .ethumb{
+    aspect-ratio:1/1;background:var(--soft);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    cursor:zoom-in;border-radius:2px;
+  }
+  .ethumb img{max-width:100%;max-height:100%;display:block;transition:transform .3s ease;}
+  .ethumb:hover img{transform:scale(1.06);}
   @media(max-width:560px){ .bio{grid-template-columns:1fr;justify-items:center;text-align:left;} }
 
   footer.foot{
@@ -283,6 +300,7 @@
       <div class="avatar"><img src="artist.png" id="bioImg" alt="Драшко Накиќ" onerror="this.style.display='none';this.parentNode.textContent='ДН';"></div>
       <p id="bioText"></p>
     </div>
+    <div class="exhibitions" id="exhibitions"></div>
   </section>
 
   <footer class="foot">
@@ -1078,6 +1096,23 @@ const PRICES = [
   {key:"large",  print:"5000", frame:"7000"},
 ];
 
+const EXHIBITIONS = [
+  {
+    city:    { mk:"Скопје",  en:"Skopje" },
+    country: { mk:"Северна Македонија", en:"North Macedonia" },
+    venue:   { mk:"КСП Јадро", en:"KSP Jadro" },
+    dates:   { mk:"23–26 февруари 2026", en:"February 23–26, 2026" },
+    items:   [1,2,3,4,5,6,7,8,10,12,13,14,15,16,17,18,19,20,21,22,23]
+  },
+  {
+    city:    { mk:"Њујорк", en:"New York" },
+    country: { mk:"САД", en:"USA" },
+    venue:   { mk:"Gallery MC", en:"Gallery MC" },
+    dates:   { mk:"7–11 јануари 2025", en:"January 7–11, 2025" },
+    items:   [24,25,26,27,28,29,30,31,9,11,1,2,10,3,4,7,8]
+  }
+];
+
 const I18N = {
   mk: {
     brand: "Драшко Накиќ",
@@ -1091,6 +1126,7 @@ const I18N = {
     thPrint:"принт", thFramed:"врамена", cur:"ден.",
     cat:{ small:"мала", medium:"средна", large:"голема" },
     sizesH:"Големини и цени",
+    exhTitle:"Самостојни изложби",
     priceLine:(p,f)=> p+" ден. само принт · "+f+" ден. врамена",
     bio: "Драшко Накиќ (14.07.1983, Скопје, Северна Македонија) е доктор на науки по биомедицинска информатика. Моментно работи на својот стартап, а поседува долгогодишно истражувачко искуство на универзитетите Харвард и Колумбија во САД. Во својата претприемачка и научна дејност, д-р Накиќ се фокусира на дизајн на алатки поткрепени од вештачка интелигенција кои им помагаат на пациентите да ги разберат своите медицински податоци и да комуницираат поефективно со лекарите. Во 2020 година, Драшко се одлучува да ги преточи своите вештини за визуелизација на податоци во презентирање на животни настани преку геометриски форми и строги правила на нивниот аранжман. Овој труд вродува со плод преку самостојни изложби во Њујорк (САД) во 2025 година и Скопје (Северна Македонија) во 2026 година."
   },
@@ -1106,6 +1142,7 @@ const I18N = {
     thPrint:"print", thFramed:"framed", cur:"den.",
     cat:{ small:"small", medium:"medium", large:"large" },
     sizesH:"Sizes & prices",
+    exhTitle:"Solo Exhibitions",
     priceLine:(p,f)=> p+" den. print only · "+f+" den. framed",
     bio: "Drashko Nakikj (born July 14, 1983, Skopje, North Macedonia) holds a PhD in biomedical informatics. He is currently building his own startup and has many years of research experience at Harvard and Columbia universities in the USA. In his entrepreneurial and scientific work, Dr. Nakikj focuses on designing AI-powered tools that help patients understand their medical data and communicate more effectively with their doctors. In 2020, Drashko decided to channel his data-visualization skills into portraying life events through geometric shapes and strict rules for their arrangement. This work has borne fruit through solo exhibitions in New York (USA) in 2025 and Skopje (North Macedonia) in 2026."
   }
@@ -1236,6 +1273,47 @@ document.addEventListener("keydown",e=>{
   }
 });
 
+/* ---------- exhibitions (bio page) ---------- */
+function renderExhibitions(){
+  const box = document.getElementById("exhibitions");
+  if(!box) return;
+  const d = t();
+  box.innerHTML = "";
+  const h = document.createElement("h2");
+  h.className = "section";
+  h.textContent = d.exhTitle;
+  box.appendChild(h);
+  EXHIBITIONS.forEach(ex=>{
+    const seg = document.createElement("div");
+    seg.className = "exh";
+    const title = document.createElement("div");
+    title.className = "exh-h";
+    title.textContent = ex.city[lang] + ", " + ex.country[lang] + " — " + ex.venue[lang];
+    const sub = document.createElement("div");
+    sub.className = "exh-sub";
+    sub.textContent = ex.dates[lang];
+    const grid = document.createElement("div");
+    grid.className = "exh-grid";
+    ex.items.forEach(no=>{
+      const w = works.find(x=>x.no===no);
+      if(!w) return;
+      const th = document.createElement("div");
+      th.className = "ethumb";
+      const img = document.createElement("img");
+      img.loading = "lazy";
+      img.src = enc(w.file);
+      img.alt = titleOf(w);
+      th.appendChild(img);
+      th.addEventListener("click",()=>openGallery(no));
+      grid.appendChild(th);
+    });
+    seg.appendChild(title);
+    seg.appendChild(sub);
+    seg.appendChild(grid);
+    box.appendChild(seg);
+  });
+}
+
 /* ---------- language ---------- */
 function buildPriceTable(){
   const d = t();
@@ -1276,6 +1354,7 @@ function applyLang(l){
   document.getElementById("bioImg").alt = d.brand;
   // dynamic content
   buildGrids();
+  renderExhibitions();
   if(galleryModal.classList.contains("open")) renderGallery();
   if(shopModal.classList.contains("open")) renderShop();
 }
